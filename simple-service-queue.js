@@ -46,8 +46,8 @@ SimpleServiceQueueConnection.prototype.call = function (procedureName, payload) 
           var promise = new Promise(function (resolve) {
             channel.consume(replyToQueue, function (msg) {
               if (msg.properties.correlationId === correlationId) {
-                var reponsePayload = convertBufferToJSON(msg.content);
-                resolve(reponsePayload);
+                var responsePayload = convertBufferToJSON(msg.content);
+                resolve(responsePayload);
               }
             });
           });
@@ -57,7 +57,7 @@ SimpleServiceQueueConnection.prototype.call = function (procedureName, payload) 
             replyTo: replyToQueue
           };
           var content = convertJSONToBuffer(payload);
-          channel.publish(procedureName, '', content, options)
+          channel.publish(procedureName, '', content, options);
 
           return promise;
         });
@@ -94,7 +94,6 @@ SimpleServiceQueueConnection.prototype._getChannelPromiseForEventName = function
       channel.assertQueue(queueName);
       channel.assertExchange(eventName, exchangeType);
       channel.bindQueue(queueName, eventName, '');
-      self._channelByEventName[eventName] = channel;
       return channel;
     });
 };
