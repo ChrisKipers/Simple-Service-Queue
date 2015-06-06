@@ -43,11 +43,12 @@ SimpleServiceQueueConnection.prototype.call = function (procedureName, payload) 
           var replyToQueue = queue.queue;
           var correlationId = uuid();
 
-          var promise = new Promise(function (resolve) {
+          var promise = new Promise(function (resolve, reject) {
             channel.consume(replyToQueue, function (msg) {
               if (msg.properties.correlationId === correlationId) {
-                var responsePayload = convertBufferToJSON(msg.content);
-                resolve(responsePayload);
+                var responsePayloadWrapper = convertBufferToJSON(msg.content);
+                var func = responsePayloadWrapper.success ? resolve : reject;
+                func(responsePayloadWrapper.payload);
               }
             });
           });
@@ -71,14 +72,26 @@ SimpleServiceQueueConnection.prototype.respondTo = function (procedureName, call
       var queueName = self._getQueueNameForServiceAndEvent(self.serviceName, procedureName);
       channel.consume(queueName, function (msg) {
         var requestPayload = convertBufferToJSON(msg.content);
-        callback(requestPayload, responseCallback);
+        callback(requestPayload, resolve, reject);
 
-        function responseCallback(responseBody) {
+        function resolve(responseBody) {
+          responseCallback(responseBody, true);
+        }
+
+        function reject(responseBody) {
+          responseCallback(responseBody, false);
+        }
+
+        function responseCallback(responseBody, success) {
           var responseQueue = msg.properties.replyTo;
           var options = {
             correlationId: msg.properties.correlationId
           };
-          var payload = convertJSONToBuffer(responseBody);
+          var responseWrapper = {
+            success: success,
+            payload: responseBody
+          };
+          var payload = convertJSONToBuffer(responseWrapper);
           channel.sendToQueue(responseQueue, payload, options);
           channel.ack(msg);
         }

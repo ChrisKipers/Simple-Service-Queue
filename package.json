@@ -2,7 +2,7 @@
   "name": "simple-service-queue",
   "description": "An abstraction ontop of amqp for setting up a simple event system with additional rpc support",
   "keywords": ["amqp"],
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": {
     "name": "Chris Kipers",
     "email": "ckipers@gmail.com"
