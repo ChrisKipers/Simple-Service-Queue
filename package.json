@@ -1,7 +1,16 @@
 {
-  "name": "Simple Service Queue",
+  "name": "simple-service-queue",
+  "description": "An abstraction ontop of amqp for setting up a simple event system with additional rpc support",
+  "keywords": ["amqp"],
   "version": "0.0.1",
-  "private": false,
+  "author": {
+    "name": "Chris Kipers",
+    "email": "ckipers@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ChrisKipers/Simple-Service-Queue"
+  },
   "dependencies": {
     "amqplib": "^0.3.2",
     "es6-promise": "^2.2.0",
