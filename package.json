@@ -1,0 +1,10 @@
+{
+  "name": "Simple Service Queue",
+  "version": "0.0.1",
+  "private": false,
+  "dependencies": {
+    "amqplib": "^0.3.2",
+    "es6-promise": "^2.2.0",
+    "uuid": "^2.0.1"
+  }
+}
